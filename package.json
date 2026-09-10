@@ -1,0 +1,21 @@
+{
+  "name": "model-routing",
+  "version": "2.14.2",
+  "description": "Cross-vendor model routing for Claude Code: showdown duels, attested judges, quota pacing, adaptive matrix",
+  "type": "module",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/Brian-Plummer/model-routing.git" },
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "test": "npm run build && node --test 'dist/tests/*.js'"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "typescript": "^7.0.2"
+  }
+}

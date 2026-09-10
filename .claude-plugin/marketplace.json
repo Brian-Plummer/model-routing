@@ -1,0 +1,7 @@
+{
+  "name": "brian-plummer",
+  "owner": { "name": "Brian Plummer" },
+  "plugins": [
+    { "name": "model-routing", "source": "./", "description": "Cross-vendor model routing engine" }
+  ]
+}
