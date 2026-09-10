@@ -14,6 +14,31 @@ Developed privately from 2026-07-23. Public history begins at this commit, at ve
 - **Score.** Standings per kind: judge wins (quality) first, then latency wins (time); tokens decide nothing. A letter-grade average per side. No automatic promotion, demotion or re-pairing: the engine flags streaks and the operator re-pairs by hand.
 - **Pace.** Per-lane utilization against the subscription window, pace sign, reset time, and a state: `open`, `soft`, `burn`, `closed`, `stale`. A closed lane is routed around. A stale lane means "start a session there".
 
+## What the record shows
+
+A snapshot of the private ledger, pulled 2026-09-10: 444 duels minted between 2026-07-24 and 2026-09-09 on one operator's repositories. 228 were judged (150 decided by the judges, 77 by latency, 1 by tokens), 138 ran as unions, 23 were walkovers, 33 stayed unresolved (25 contested, 7 both-failed, 1 open) and 22 were abandoned. The ledger is not published, so these are that one pull, not a live number. The dated incident notes behind each point are in [`skills/model-routing/SKILL.md`](skills/model-routing/SKILL.md).
+
+**Two judges are not optional.** 261 duels received two blind judgments. The judges split on 106 of them (41%), and on 22 they named opposite winners. One judge would have settled every one of those with the same confidence as the rest. The seats also calibrate differently: the OpenAI judge failed both sides 29 times, the Anthropic judge 7; Anthropic grades cluster at A−, OpenAI grades at A and A+. So the engine stores a grade per judge and reports each side's average both ways ([judge template](skills/model-routing/SKILL.md#judge-template)).
+
+**No frontier model dominates, so the matrix is per kind.** On implementation-build, opus (high) against gpt-5.6-sol (xhigh) over 114 judged duels: sol took the quality channel 51–19, opus took the time channel 29–14. On deep-review the same tier pair split nine duels almost evenly, with the judges themselves split or tied on most of them. Quality and speed went to different vendors, and different kinds went different ways. The seat is chosen per kind, and a streak is flagged for the operator rather than acted on ([kind discipline](skills/model-routing/SKILL.md#kind-discipline)).
+
+**For review work, the union of both sides beats either winner.** The deep-review contest showed each side reliably finding severe defects the other missed: opus alone caught an outage reporting green and 5-minute bars treated as daily; sol alone caught cash flows booked as performance and a regime leaking backward through decades of backtests. Picking a winner threw findings away, so since 2026-07-25 deep-review runs both sides and ships the merge with no judge. 124 union runs since, plus 9 on second-opinion and 5 on web-research once they measured the same way. Eight of the deep-review unions shipped one-sided under quota exhaustion, and the ledger says which ([union protocol](skills/model-routing/SKILL.md#union-protocol-deep-review)).
+
+**Weaker models earn bounded seats.** haiku against gpt-5.3-codex-spark on mechanical-apply: 10 judged, an identical 3.58 grade average, judge wins 3–2 to haiku, every latency win to spark. On transcription haiku leads 10–8 with a 3.38 to 3.20 grade average. gpt-5.6-luna was retired after haiku beat it 2–0 unanimously. The seat is the point: the haiku tier is seeded only on mechanical-apply, mechanical-sweep, bulk-mechanical-misc and transcription, behind judges and controller gates, and never joins a union or an implementation row. Cheap models go where a judge can tell whether they did the job.
+
+**Attestation catches what reading cannot.** 23 FAIL outcomes stand against seven models. Among them: a judge vote cast with no run behind it, a reviewer claiming a test run that never happened, an implementer weakening a safety clamp to turn a fixture green, a side citing archive paths that did not exist. None was caught by taking a report at its word. A side without a matching session file, or with a proof already spent on another slot, is refused at `record_duel`, and the judges verify claims against the tree rather than the prose. 27 of 522 judgments flagged a defect in the brief itself, which is why the brief is graded along with the sides ([lane integrity](skills/model-routing/SKILL.md#lane-integrity-hard-rules), [harness parity](skills/model-routing/SKILL.md#harness-parity--what-a-duel-measures-operator-2026-08-10)).
+
+| Kind | Pairing (Claude / OpenAI) | Judged | Judge wins | Latency wins | Grade avg |
+|---|---|---|---|---|---|
+| implementation-build | opus high / gpt-5.6-sol xhigh (retired) | 114 | 19 / 51 | 29 / 14 | — |
+| implementation-build | opus high / gpt-6-astra xhigh | 3 | 0 / 1 | 2 / 0 | 3.75 / 3.90 |
+| deep-review | opus xhigh / gpt-5.6-sol xhigh (retired) | 9 | 2 / 3 | 3 / 1 | — |
+| transcription | haiku medium / gpt-5.3-codex-spark xhigh | 18 | 8 / 4 | 2 / 4 | 3.38 / 3.20 |
+| mechanical-apply | haiku low / gpt-5.3-codex-spark xhigh | 10 | 3 / 2 | 0 / 5 | 3.58 / 3.58 |
+| mechanical-sweep | haiku low / gpt-5.3-codex-spark low (retired) | 3 | 3 / 0 | 0 / 0 | — |
+
+Wins are Claude / OpenAI. Grade averages (4.3 scale) are reported for current pairings only; `standings` prints the full table.
+
 ## Lanes
 
 | Lane | What runs it | Default location |
